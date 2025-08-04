@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 import SwiftUI
-import UIKit
+import AppKit
 
 // TODO: Callbacks & functions:
 // - Did select node - only support single selection
@@ -82,15 +82,16 @@ public struct Node: Identifiable, Equatable {
     public var value: Double? = nil
     
     public var showName: Bool = true
-    public var image: UIImage? = nil
-    public var backgroundColor: UIColor? = nil
+    public var image: NSImage? = nil
+    public var backgroundColor: NSColor? = nil
+
+    var computedBackgroundColor: NSColor = .systemGray
 
     // Internal values
     var computedValue: Double = 0.0
-    var computedBackgroundColor: UIColor = .systemGray
 
-    public init(name: String, showName: Bool = true, image: UIImage? = nil,
-                value: Double? = nil, backgroundColor: UIColor? = nil, children: [Node] = []) {
+    public init(name: String, showName: Bool = true, image: NSImage? = nil,
+                value: Double? = nil, backgroundColor: NSColor? = nil, children: [Node] = []) {
         self.name = name
         self.showName = showName
         self.image = image

@@ -50,22 +50,32 @@ public struct SunburstView: View {
 }
 
 #if DEBUG
-struct SunburstView_Previews : PreviewProvider {
+struct SunburstView_Previews: PreviewProvider {
     static var previews: some View {
-        let configuration = SunburstConfiguration(nodes: [
-            Node(name: "Walking",
-                 showName: false,
-                 value: 10.0,
-                 backgroundColor: .systemBlue),
-            Node(name: "Restaurant",
-                 showName: false,
-                 value: 30.0,
-                 backgroundColor: .systemRed),
-            Node(name: "Home",
-                 showName: false,
-                 value: 75.0,
-                 backgroundColor: .systemTeal)
-        ])
+        // Layer 3 nodes
+        let fileNodes1 = [
+            Node(name: "File 1", value: 5.0, backgroundColor: .systemGreen),
+            Node(name: "File 2", value: 10.0, backgroundColor: .systemGreen)
+        ]
+        let fileNodes2 = [
+            Node(name: "File 3", value: 3.0, backgroundColor: .systemOrange),
+            Node(name: "File 4", value: 7.0, backgroundColor: .systemOrange)
+        ]
+
+        // Layer 2 nodes with children
+        let folderNodes = [
+            Node(name: "Documents", value: nil, backgroundColor: .systemBlue, children: fileNodes1),
+            Node(name: "Downloads", value: nil, backgroundColor: .systemPurple, children: fileNodes2)
+        ]
+
+        // Layer 1 root nodes with children
+        let rootNodes = [
+            Node(name: "User", value: nil, backgroundColor: .systemRed, children: folderNodes),
+            Node(name: "System", value: 20.0, backgroundColor: .systemGray)
+        ]
+
+        let configuration = SunburstConfiguration(nodes: rootNodes, calculationMode: .parentIndependent())
+
         return SunburstView(configuration: configuration)
     }
 }
