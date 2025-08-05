@@ -73,6 +73,8 @@ public class SunburstConfiguration: ObservableObject {
     }
 }
 
+
+
 /// The `Node` class holds the data shown in the diagram
 public struct Node: Identifiable, Equatable {
     public let id = UUID()
@@ -155,6 +157,8 @@ extension SunburstConfiguration {
     
     // MARK: Private
     
+    
+    
     private func totalLeavesCount(nodes: [Node]) -> UInt {
         var nodesLeavesCount: UInt = 0
         for node in nodes {
@@ -171,17 +175,22 @@ extension SunburstConfiguration {
         return nodes.reduce(0.0) { $0 + $1.computedValue }
     }
     
-    private func validateAndPrepareColors(nodes: inout [Node]) {
+    private func validateAndPrepareColors(nodes: inout [Node], parentColor: NSColor? = nil) {
         for nodeIndex in 0..<nodes.count {
             if let backgroundColor = nodes[nodeIndex].backgroundColor {
                 nodes[nodeIndex].computedBackgroundColor = backgroundColor
+            } else if let parentColor = parentColor {
+                // Derive a lighter shade from parent's color for children
+                nodes[nodeIndex].computedBackgroundColor = parentColor.lighter(by: 0.15)
+            } else {
+                // Assign a default color if no parent color and no explicit color
+                nodes[nodeIndex].computedBackgroundColor = NSColor.systemBlue
             }
+
             if nodes[nodeIndex].children.count > 0 {
-                validateAndPrepareColors(nodes: &nodes[nodeIndex].children)
+                validateAndPrepareColors(nodes: &nodes[nodeIndex].children, parentColor: nodes[nodeIndex].computedBackgroundColor)
             }
         }
-        
-        // TODO: implement compute Colors if no color provided
     }
     
     private func validateAndPrepareValues() {
